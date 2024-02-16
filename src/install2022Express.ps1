@@ -5,14 +5,14 @@ $sqlExpressDownloadUrl = "https://download.microsoft.com/download/5/1/4/5145fe04
 $sqlManagementStudioDownloadUrl = "https://aka.ms/ssmsfullsetup?clcid=0x409"
 $sqlYear = 2022
 $sqlVersion = 16
-$instanceName = "SQLEXPRESS"
+$instanceName = "FRCSQLEXPRESS"
 $user = whoami
 
 $expressInstallerPath = "./Temp/SQL$sqlYear-SSEI-Expr.exe"
 $fullInstallerPath = "./Temp/SQLEXPR_x64_ENU.exe"
 $setupFolderPath = "./Temp/SQLEXPR_x64_ENU"
 $ssmsInstallerPath = "./Temp/SSMS-Setup-ENU.exe"
-$sqlInstallArgs = "/qs /ACTION=Install /FEATURES=SQLEngine /INSTANCENAME=$instanceName /ENU /IACCEPTSQLSERVERLICENSETERMS /UPDATEENABLED=false /USEMICROSOFTUPDATE=false"
+$sqlInstallArgs = "/qs /ACTION=Install /FEATURES=SQLEngine /INSTANCENAME=$instanceName /ENU /IACCEPTSQLSERVERLICENSETERMS /UPDATEENABLED=false /USEMICROSOFTUPDATE=false /ERRORREPORTING=0 /SQMREPORTING=0 /AGTSVCSTARTUPTYPE=Manual /SQLSVCSTARTUPTYPE=Automatic /FILESTREAMLEVEL=0 /ENABLERANU=0 /SQLCOLLATION=SQL_Latin1_General_CP1_CI_AS /SQLSVCACCOUNT=`"NT AUTHORITY\NETWORK SERVICE`" /ADDCURRENTUSERASSQLADMIN /TCPENABLED=0 /NPENABLED=0 /BROWSERSVCSTARTUPTYPE=Automatic /SECURITYMODE=SQL /SAPWD=FIRSTengpass01"
 
 $maxDownloadRepeatCount = 5
 $actualInstanceName = $instanceName
@@ -91,7 +91,7 @@ $dataDir = "$installedPath\DATA"
 New-Item -Path $dataDir -ItemType Directory
 
 # set ACL for the SQL Server account
-$user = "NT SERVICE\$serviceName"
+$user = "NT AUTHORITY\NETWORK SERVICE"
 
 $acl = Get-Acl $logDir
 $accessRule = New-Object System.Security.AccessControl.FileSystemAccessRule($user,"FullControl","ContainerInherit,ObjectInherit","None","Allow")
@@ -133,7 +133,7 @@ New-ItemProperty -Path $registryPath -Name $name -Value $value -Force
 
 # rebuild databases
 $user = whoami
-Start-Process -FilePath "$setupFolderPath/SETUP.EXE" -ArgumentList "/QUIET /ACTION=REBUILDDATABASE /INSTANCENAME=$actualInstanceName /ENU /SQLSYSADMINACCOUNTS=$user" -Wait
+Start-Process -FilePath "$setupFolderPath/SETUP.EXE" -ArgumentList "/QUIET /ACTION=REBUILDDATABASE /INSTANCENAME=$actualInstanceName /ENU /SQLSYSADMINACCOUNTS=$use /SQLCOLLATION=SQL_Latin1_General_CP1_CI_AS /SAPWD=FIRSTengpass01r" -Wait
 
 # run the service - it should start now
 net start $serviceName
