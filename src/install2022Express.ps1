@@ -133,7 +133,7 @@ New-ItemProperty -Path $registryPath -Name $name -Value $value -Force
 
 # rebuild databases
 $user = whoami
-Start-Process -FilePath "$setupFolderPath/SETUP.EXE" -ArgumentList "/QUIET /ACTION=REBUILDDATABASE /INSTANCENAME=$actualInstanceName /ENU /SQLSYSADMINACCOUNTS=$use /SQLCOLLATION=SQL_Latin1_General_CP1_CI_AS /SAPWD=FIRSTengpass01r" -Wait
+Start-Process -FilePath "$setupFolderPath/SETUP.EXE" -ArgumentList "/QUIET /ACTION=REBUILDDATABASE /INSTANCENAME=$actualInstanceName /ENU /SQLSYSADMINACCOUNTS=$user /SQLCOLLATION=SQL_Latin1_General_CP1_CI_AS /SAPWD=FIRSTengpass01r" -Wait
 
 # run the service - it should start now
 net start $serviceName
